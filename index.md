@@ -556,10 +556,10 @@ function setNumberCourts() {
 
 function windowResize() {
     console.log(document.getElementById('grid').offsetWidth);
-    numberOfCols = Math.max(1, Math.floor(document.getElementById('grid').offsetWidth/420));
+    numberOfCols = Math.max(1, Math.floor(document.getElementById('grid').offsetWidth/320));
     numberOfRows = Math.ceil(numberOfDays/numberOfCols);
 
-    const width = "400px ";
+    const width = "300px ";
     const auto = "auto "
     document.getElementById("grid").style.gridTemplateColumns = width.repeat(numberOfCols);
     document.getElementById("grid").style.gridTemplateRows = auto.repeat(numberOfRows);
@@ -987,6 +987,6 @@ function deleteTrainingDay() {
 
     /* Change the background color of the dropdown button when the dropdown content is shown */
     .dropdown:hover .saveLoadButton {background-color: #3e8e41;}
-
+    
     </style>
     
