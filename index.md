@@ -555,7 +555,8 @@ function setNumberCourts() {
 }
 
 function windowResize() {
-    numberOfCols = Math.max(1, Math.floor(window.innerWidth/420));
+    console.log(document.getElementById('grid').offsetWidth);
+    numberOfCols = Math.max(1, Math.floor(document.getElementById('grid').offsetWidth/420));
     numberOfRows = Math.ceil(numberOfDays/numberOfCols);
 
     const width = "400px ";
