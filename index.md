@@ -68,8 +68,6 @@ var numberOfCourts = 3;
 var draggingOver = null;
 var courtNumber = 0;
 var currentSchedule;
-var initialBodyWidth = document.getElementById('grid').offsetWidth;
-var bodyWidth = document.getElementById('grid').offsetWidth;
 
 var teamClashList = [];
 var timeClashList = [];
@@ -557,12 +555,11 @@ function setNumberCourts() {
 }
 
 function windowResize() {
-    bodyWidth = document.getElementById('grid').offsetWidth;
-
-    numberOfCols = Math.max(1, Math.floor(bodyWidth/(initialBodyWidth/3 + 20)));
+    console.log(document.getElementById('grid').offsetWidth);
+    numberOfCols = Math.max(1, Math.floor(document.getElementById('grid').offsetWidth/410));
     numberOfRows = Math.ceil(numberOfDays/numberOfCols);
-    
-    const width = initialBodyWidth/3 + "px ";
+
+    const width = "400px ";
     const auto = "auto "
     document.getElementById("grid").style.gridTemplateColumns = width.repeat(numberOfCols);
     document.getElementById("grid").style.gridTemplateRows = auto.repeat(numberOfRows);
@@ -655,7 +652,7 @@ function mouseLeave(ele) {
 }
 
 function resizeTimeSlot(slot) {
-    var width = (300 - 10*(numberOfCourts + 2)) / (numberOfCourts + 1) ;
+    var width = (400 - 10*(numberOfCourts + 2)) / (numberOfCourts + 1) ;
     var string1 = "repeat( auto-fill, minmax(";
     var string2 = Math.floor(width).toString();
     var string3 = "px, 1fr) )";
