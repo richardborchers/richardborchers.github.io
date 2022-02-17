@@ -43,7 +43,7 @@
             </div>
         </div>
 
-        <button class="saveLoadButton" id="done2 button">Done</button>
+        
         <button class="saveLoadButton" id="save2 button">Save</button>
         <div class = "dropdown">
             <button class="saveLoadButton" id="load2 button">Load</button>
@@ -51,6 +51,7 @@
 
             </div>
         </div>
+        <button class="saveLoadButton" id="done2 button">Done</button>
     </div>
 </section>
 
@@ -68,7 +69,7 @@ var numberOfCourts = 3;
 var draggingOver = null;
 var courtNumber = 0;
 var currentSchedule;
-
+var justSaved = false;
 var teamClashList = [];
 var timeClashList = [];
 setupMenu1Buttons();
@@ -88,7 +89,12 @@ function getTeamNameList() {
 }
 
 function setupComplete(){
-    console.log("complete");
+    if (!justSaved){
+        if (!confirm('Continue without saving the current schedule?')) {
+            return;
+        }
+    }
+    console.log("continue");
 }
 //----------------------------------------------------------------------------------
 function updateTeamClashDropDown(){
@@ -105,8 +111,47 @@ function updateTeamClashDropDown(){
         dropDownList[i].innerHTML = teamClashList[i][0] + " - " + teamClashList[i][1];
         dropDownList[i].classList += 'a';
         dropDownArea.appendChild(dropDownList[i]);
-        dropDownList[i].onclick = function() {console.log("hiii")};
+        dropDownList[i].onclick = function(event) {showTeamClash(teamClashList[i])};
     }
+}
+
+function showTeamClash(clash){
+    if (event.ctrlKey){
+        removeTeamClash(clash);
+        return;
+    }
+    var teams = document.getElementsByClassName('team');
+    console.log(teams);
+    for (let i = 0; i < teams.length; i++){
+
+        if(teams[i].id == clash[0] || teams[i].id == clash[1]){
+            teams[i].style.backgroundColor = '#8ea754';
+        }
+    }
+    
+    window.onclick = function(event) {
+        console.log(event.target.innerHTML == getTeamClashName(clash));
+        if(event.target.innerHTML != getTeamClashName(clash)){
+            for (let i = 0; i < teams.length; i++){
+                teams[i].style.backgroundColor = startCourtColor;
+            }
+        }
+    }
+}
+
+function arrayRemove(arr, value){
+    for( var i = 0; i < arr.length; i++){                         
+        if ( arr[i] === value) { 
+            arr.splice(i, 1); 
+            i--; 
+        }
+    }
+}
+
+function removeTeamClash(clash){
+    arrayRemove(teamClashList, clash);
+    updateTeamClashDropDown();
+    justSaved = false;
 }
 
 function createTeamClashButton(){
@@ -139,6 +184,7 @@ function teamClashSelectComplete(first, second, dropDownArea){
     var thisClash = [first, second];
     teamClashList.push(thisClash);
     updateTeamClashDropDown();
+    justSaved = false;
 }
 
 function nextTeamClashSelect(lastName, dropDownArea){
@@ -188,11 +234,30 @@ function updateTimeClashDropDown(){
         dropDown = document.createElement('a');
         dropDownList.push(dropDown);
         dropDownList[i].id = i;
-        dropDownList[i].innerHTML = timeClashList[i][0] + " - " + timeClashList[i][1];
+        dropDownList[i].innerHTML = getTeamClashName(timeClashList[i]);
         dropDownList[i].classList += 'a';
         dropDownArea.appendChild(dropDownList[i]);
-        dropDownList[i].onclick = function() {console.log("hiii")};
+        dropDownList[i].onclick = function(event) {showTimeClash(timeClashList[i])};
     }
+}
+
+function getTeamClashName(clash){
+    return clash[0] + " - " + clash[1];
+}
+
+function showTimeClash(clash){
+    if (event.ctrlKey){
+        removeTimeClash(clash);
+        return;
+    }
+    
+}
+
+function removeTimeClash(clash){
+    arrayRemove(timeClashList, clash);
+    console.log("removing" + clash);
+    updateTimeClashDropDown();
+    justSaved = false;
 }
 
 function createTimeClashButton(){
@@ -224,6 +289,7 @@ function timeClashSelectComplete(first, second, dropDownArea){
     var thisClash = [first, second];
     timeClashList.push(thisClash);
     updateTimeClashDropDown();
+    justSaved = false;
 }
 
 function nextTimeClashSelect(lastName, dropDownArea){
@@ -252,11 +318,6 @@ function nextTimeClashSelect(lastName, dropDownArea){
 
 //-----------------------------------------------------------------------------
 
-
-function saveSchedulePlusClashes(){
-    console.log("Saving schedule plus clashes")
-}
-
 function setupMenu1Buttons() {
     document.getElementById("add training day").addEventListener ("click", createTrainingDay);
     document.getElementById("delete training day").addEventListener ("click", deleteTrainingDay);
@@ -280,7 +341,7 @@ function setupMenu2Buttons(){
 
 function saveSchedulePlusClashes() {
     console.log("Saving2...");
-
+    
     schedule = makeJSONSchedule();
 
     var inputField = document.createElement("INPUT");
@@ -294,6 +355,7 @@ function saveSchedulePlusClashes() {
         if (event.key === "Enter"){
             if (inputField.value.length > maxlength) {
                 inputField.value = inputField.value.substring(0, maxlength);
+                justSaved = true;
                 return;
             }
             var scheduleName = inputField.value;
@@ -386,6 +448,7 @@ function saveSchedule() {
         if (event.key === "Enter"){
             if (inputField.value.length > maxlength) {
                 inputField.value = inputField.value.substring(0, maxlength);
+                justSaved = true;
                 return;
             }
             var scheduleName = inputField.value;
@@ -397,7 +460,18 @@ function saveSchedule() {
     setupLoadSchedule();
 }
 
+function deleteFromLocalStorage(str){
+    localStorage.removeItem(str);
+    setupLoadSchedule();
+}
+
 function loadSchedule(str) {
+    if(event.ctrlKey){
+
+        deleteFromLocalStorage(str);
+        return;
+    }
+    
     var schedule = JSON.parse(localStorage.getItem(str));
     console.log(schedule);
     removeAllChildren(document.getElementById('grid'));
@@ -445,6 +519,7 @@ function loadSchedule(str) {
     }
     updateTeamClashDropDown();
     updateTimeClashDropDown();
+    justSaved = true;
 }
 
 function removeAllChildren(parent){
@@ -466,7 +541,7 @@ function setupLoad2Schedule() {
         droppingDown.className = 'a';
         droppingDown.innerHTML = scheduleNameList[i];
         droppingDown.id = droppingDown.innerHTML;
-        droppingDown.onclick = function() {loadSchedule(scheduleNameList[i])};
+        droppingDown.onclick = function(event) {loadSchedule(scheduleNameList[i])};
         document.getElementById('load2-dropdown').appendChild(droppingDown);
     }
 }
@@ -484,13 +559,13 @@ function setupLoadSchedule() {
         droppingDown.className = 'a';
         droppingDown.innerHTML = scheduleNameList[i];
         droppingDown.id = droppingDown.innerHTML;
-        droppingDown.onclick = function() {loadSchedule(scheduleNameList[i])};
+        droppingDown.onclick = function(event) {loadSchedule(scheduleNameList[i])};
         document.getElementById('load-dropdown').appendChild(droppingDown);
     }
 }
 
 function addTeam() {
-
+    
     var inputField = document.createElement("INPUT");
     inputField.setAttribute("type", "text");
     inputField.setAttribute("value", "Team name");
@@ -527,6 +602,7 @@ function addTeam() {
                             cell[0].className = 'team';
                         }
                     }
+                    justSaved = false;
                 }
             });
         } 
@@ -594,7 +670,7 @@ function addTimeSlot(day){
     day.lastChild.appendChild(newTimeSlot);
     
     resizeTimeSlot(newTimeSlot);
-    
+    justSaved = false;
 }
 
 function startDrag(ele) {
@@ -630,6 +706,9 @@ function swapNodes(n1, n2) {
 function endDrag(ele) {
     if (draggingOver){
         swapNodes(ele, draggingOver);
+        if(ele != draggingOver){
+            justSaved = false;
+        }
         draggingOver = null;
     }
 }
@@ -665,6 +744,7 @@ function deleteTimeSlot(day){
     if (day.lastChild.lastChild){
     day.lastChild.lastChild.remove()
     }
+    justSaved = false;
 }
 
 function makeHeader(day){
@@ -712,6 +792,7 @@ function createTrainingDay() {
     document.getElementById("grid").appendChild(newDay);
 
     windowResize();
+    justSaved = false;
 }
 
 function editDayDescription(description) {
@@ -728,6 +809,7 @@ function editDayDescription(description) {
             }
             description.innerHTML = inputField.value;
             inputField.replaceWith(description);
+            justSaved = false;
         }
     });
     
@@ -741,11 +823,13 @@ function deleteTrainingDay() {
         document.getElementById("grid").lastChild.remove();
     }
     windowResize();
+    justSaved = false;
 }
 
 </script>
 
 <style>
+
     .grid-container {
     background-color: gray;
     margin: 0;
