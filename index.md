@@ -987,6 +987,6 @@ function deleteTrainingDay() {
 
     /* Change the background color of the dropdown button when the dropdown content is shown */
     .dropdown:hover .saveLoadButton {background-color: #3e8e41;}
-    .inner {max-width: 75%;}
+
     </style>
     
