@@ -217,7 +217,7 @@ function nextTeamClashSelect(lastName, dropDownArea){
         dropDownList[i].onclick = function() {teamClashSelectComplete(lastName, dropDownList[i].innerHTML, dropDownArea)};
     }
     window.onclick = function(event) {
-        if (!event.target.matches('.saveloadbutton') && !event.target.matches('a')) {
+        if (event.target.className != 'saveLoadButton' && !event.target.matches('a')) {
             dropDownArea.style.display = 'none';
         }
     }
