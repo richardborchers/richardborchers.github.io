@@ -163,6 +163,7 @@ function removeTeamClash(clash){
 }
 
 function createTeamClashButton(){
+    console.log("clicked")
     var teamNames = getTeamNameList();
     var dropDownArea = document.getElementById('load create team clash dropdown');
     removeAllChildren(dropDownArea);
