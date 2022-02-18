@@ -176,8 +176,7 @@ function createTeamClashButton(){
         dropDownList[i].className = "a";
         dropDownArea.appendChild(dropDownList[i]);
         dropDownList[i].onclick = function() {nextTeamClashSelect(dropDownList[i].innerHTML, dropDownArea)};
-        console.log(teamNames[i]);
-        console.log("making element");
+        console.log(dropDownList[i]);
     }
     dropDownArea.style.display = 'block';
     console.log(dropDownArea.style.display);
