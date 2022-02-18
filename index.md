@@ -53,6 +53,10 @@
         </div>
         <button class="saveLoadButton" id="done2 button">Done</button>
     </div>
+    <div class="layout" id="Menu3" style="display: none;">
+        <button class="saveLoadButton" id="lock button">lock</button>
+        <button class="saveLoadButton" id="unlock button">unlock</button>
+    </div>
 </section>
 
 <div class="grid-container" id="grid">
@@ -72,6 +76,9 @@ var currentSchedule;
 var justSaved = false;
 var teamClashList = [];
 var timeClashList = [];
+var clickToLock = false;
+var clickToUnlock = false;
+
 setupMenu1Buttons();
 setupLoadSchedule();
 window.onresize = windowResize;
@@ -94,8 +101,11 @@ function setupComplete(){
             return;
         }
     }
-    console.log("continue");
-}
+    var currentSchedule = makeJSONSchedule();
+    document.getElementById("Menu2").style.display = "none";
+    document.getElementById("Menu3").style.display = "block";
+    setupMenu3Buttons();
+} 
 //----------------------------------------------------------------------------------
 function updateTeamClashDropDown(){
     if (teamClashList == []){
@@ -351,6 +361,31 @@ function setupMenu2Buttons(){
     updateTeamClashDropDown();
     updateTimeClashDropDown();
     removeTimeSlotButtons();
+}
+
+function setupMenu3Buttons(){
+    console.log("settingUp");
+    document.getElementById("lock button").onclick = function() {lockTeamPosition()};
+    document.getElementById("unlock button").onclick = function() {unlockTeamPosition()};
+}
+
+function lockTeamPosition(){
+    clickToLock = true;
+}
+
+function unlockTeamPosition(){
+    clickToUnlock = true;
+}
+
+function updateDraggableProperty(team){
+    if (clickToLock){
+        team.draggable = false;
+        clickToLock = false;
+    }
+    if (clickToUnlock){
+        team.draggable = true;
+        clickToUnlock = false
+    }
 }
 
 function removeTimeSlotButtons(){
@@ -619,10 +654,7 @@ function addTeam() {
                 }
             });
         } 
-    });
-
-    
-    
+    });    
 }
 
 function setNumberCourts() {
@@ -674,6 +706,7 @@ function addTimeSlot(day){
         courts[i].addEventListener('dragleave', function(){dragLeave(courts[i])});
         courts[i].addEventListener('mouseenter', function(){mouseEnter(courts[i])});
         courts[i].addEventListener('mouseleave', function(){mouseLeave(courts[i])});
+        courts[i].addEventListener('click', function(){updateDraggableProperty(courts[i])});
         newTimeSlot.appendChild(courts[i]);
         courts[i].innerHTML = courtNumber;
     }
@@ -721,8 +754,11 @@ function endDrag(ele) {
 }
 
 function dragEnter(ele) {
-    ele.style.backgroundColor = 'red';
-    draggingOver = ele;
+    if (ele.draggable){
+        ele.style.backgroundColor = 'red';
+        draggingOver = ele;
+    }
+    
 }
 
 function dragLeave(ele) {
