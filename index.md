@@ -183,7 +183,7 @@ function createTeamClashButton(){
     console.log("got to here");
     window.onclick = function(event) {
         console.log(event.target.className);
-        if (event.target.className != 'saveLoadButton' && !event.target.matches('a')) {
+        if (event.target.className != 'saveLoadButton' && event.target.className != 'a') {
             dropDownArea.style.display = 'none';
         }
     }
@@ -217,7 +217,7 @@ function nextTeamClashSelect(lastName, dropDownArea){
         dropDownList[i].onclick = function() {teamClashSelectComplete(lastName, dropDownList[i].innerHTML, dropDownArea)};
     }
     window.onclick = function(event) {
-        if (event.target.className != 'saveLoadButton' && !event.target.matches('a')) {
+        if (event.target.className != 'saveLoadButton' && event.target.className != 'a') {
             dropDownArea.style.display = 'none';
         }
     }
@@ -305,7 +305,7 @@ function createTimeClashButton(){
     }
     dropDownArea.style.display = 'block';
     window.onclick = function(event) {
-        if (!event.target.matches('.saveloadbutton') && !event.target.matches('a')) {
+        if (event.target.className != 'saveLoadButton' && event.target.className != 'a') {
             dropDownArea.style.display = 'none';
         }
     }
@@ -339,7 +339,7 @@ function nextTimeClashSelect(lastName, dropDownArea){
         dropDownList[i].onclick = function() {timeClashSelectComplete(lastName, dropDownList[i].innerHTML, dropDownArea)};
     }
     window.onclick = function(event) {
-        if (!event.target.matches('.saveloadbutton') && !event.target.matches('a')) {
+        if (event.target.className != 'saveLoadButton' && event.target.className != 'a') {
             dropDownArea.style.display = 'none';
         }
     }
