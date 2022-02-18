@@ -187,7 +187,7 @@ function createTeamClashButton(){
             dropDownArea.style.display = 'none';
         }
     }
-    dropDownArea.style.display = 'block';
+    console.log(dropDownArea.style.display);
 }
 
 function teamClashSelectComplete(first, second, dropDownArea){
