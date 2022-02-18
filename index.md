@@ -169,7 +169,7 @@ function createTeamClashButton(){
     var dropDownList = [];
     console.log(dropDownList);
     for (let i = 0; i < teamNames.length; i++){
-        console.log(teamNames.[i];
+        console.log(teamNames[i]);
         dropDown = document.createElement('a');
         dropDownList.push(dropDown);
         dropDownList[i].id = "team clash dropdown button";
