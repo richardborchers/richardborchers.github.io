@@ -1,6 +1,6 @@
 <section id="list" style="background-color: gray;">
     <div class="layout" id="Menu">
-        <button class="button" id="add training day">Adda training day</button>
+        <button class="button" id="add training day">Add training day</button>
         <button class="button" id="delete training day">Delete training day</button>
         <button class="button" id="set number courts">Courts:</button>
         <button class="button" id="add team">Add team</button>
