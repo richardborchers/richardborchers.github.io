@@ -182,8 +182,8 @@ function createTeamClashButton(){
     console.log(dropDownArea.style.display);
     console.log("got to here");
     window.onclick = function(event) {
-        console.log(event.target);
-        if (!event.target.matches('.saveloadbutton') && !event.target.matches('a')) {
+        console.log(event.target.className);
+        if (event.target.className != 'saveLoadButton' && !event.target.matches('a')) {
             dropDownArea.style.display = 'none';
         }
     }
