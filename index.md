@@ -121,7 +121,6 @@ function showTeamClash(clash){
         return;
     }
     var teams = document.getElementsByClassName('team');
-    console.log(teams);
     for (let i = 0; i < teams.length; i++){
 
         if(teams[i].id == clash[0] || teams[i].id == clash[1]){
@@ -130,8 +129,7 @@ function showTeamClash(clash){
     }
     
     window.onclick = function(event) {
-        console.log(event.target.innerHTML == getTeamClashName(clash));
-        if(event.target.innerHTML != getTeamClashName(clash)){
+        if(event.target.innerHTML != getTeamClashName(clash) && event.target.id != 'team clash dropdown button'){
             for (let i = 0; i < teams.length; i++){
                 teams[i].style.backgroundColor = startCourtColor;
             }
@@ -155,8 +153,6 @@ function removeTeamClash(clash){
 }
 
 function createTeamClashButton(){
-    
-    console.log("CTC");
     var teamNames = getTeamNameList();
     var dropDownArea = document.getElementById('load create team clash dropdown');
     removeAllChildren(dropDownArea);
@@ -164,7 +160,7 @@ function createTeamClashButton(){
     for (let i = 0; i < teamNames.length; i++){
         dropDown = document.createElement('a');
         dropDownList.push(dropDown);
-        dropDownList[i].id = i;
+        dropDownList[i].id = "team clash dropdown button";
         dropDownList[i].innerHTML = teamNames[i];
         dropDownList[i].className = "a";
         dropDownArea.appendChild(dropDownList[i]);
@@ -184,18 +180,18 @@ function teamClashSelectComplete(first, second, dropDownArea){
     var thisClash = [first, second];
     teamClashList.push(thisClash);
     updateTeamClashDropDown();
+    showTeamClash(thisClash);
     justSaved = false;
 }
 
 function nextTeamClashSelect(lastName, dropDownArea){
-    console.log(lastName);
     removeAllChildren(dropDownArea);
     var teamNames = getTeamNameList();
     var dropDownList = [];
     for (let i = 0; i < teamNames.length; i++){
         dropDown = document.createElement('a');
         dropDownList.push(dropDown);
-        dropDownList[i].id = i;
+        dropDownList[i].id = "team clash dropdown button";
         dropDownList[i].innerHTML = teamNames[i];
         dropDownList[i].className = "a";
         if (teamNames[i] == lastName){
@@ -245,23 +241,39 @@ function getTeamClashName(clash){
     return clash[0] + " - " + clash[1];
 }
 
+function getTimeClashName(clash){
+    return clash[0] + " - " + clash[1];
+}
+
 function showTimeClash(clash){
     if (event.ctrlKey){
         removeTimeClash(clash);
         return;
     }
+    var times = document.getElementsByClassName('timeSlotGrid');
+    for (let i = 0; i < times.length; i++){
+        var completeSlotName = times[i].parentElement.parentElement.firstChild.firstChild.innerHTML + ": " + times[i].firstChild.innerHTML;
+        if(completeSlotName == clash[0] || completeSlotName == clash[1]){
+            times[i].firstChild.style.backgroundColor = '#8ea754';
+        }
+    }
     
+    window.onclick = function(event) {
+        if(event.target.innerHTML != getTimeClashName(clash) && event.target.id != 'time clash dropdown button'){
+            for (let i = 0; i < times.length; i++){
+                times[i].firstChild.style.backgroundColor = '#ffffff';
+            }
+        }
+    }
 }
 
 function removeTimeClash(clash){
     arrayRemove(timeClashList, clash);
-    console.log("removing" + clash);
     updateTimeClashDropDown();
     justSaved = false;
 }
 
 function createTimeClashButton(){
-    console.log("CTC");
     var timeNames = getTimeNameList();
     var dropDownArea = document.getElementById('load create time clash dropdown');
     removeAllChildren(dropDownArea);
@@ -269,7 +281,7 @@ function createTimeClashButton(){
     for (let i = 0; i < timeNames.length; i++){
         dropDown = document.createElement('a');
         dropDownList.push(dropDown);
-        dropDownList[i].id = i;
+        dropDownList[i].id = "time clash dropdown button";
         dropDownList[i].innerHTML = timeNames[i];
         dropDownList[i].className = "a";
         dropDownArea.appendChild(dropDownList[i]);
@@ -289,6 +301,7 @@ function timeClashSelectComplete(first, second, dropDownArea){
     var thisClash = [first, second];
     timeClashList.push(thisClash);
     updateTimeClashDropDown();
+    showTimeClash(thisClash);
     justSaved = false;
 }
 
@@ -300,7 +313,7 @@ function nextTimeClashSelect(lastName, dropDownArea){
     for (let i = 0; i < timeNames.length; i++){
         dropDown = document.createElement('a');
         dropDownList.push(dropDown);
-        dropDownList[i].id = i;
+        dropDownList[i].id = "time clash dropdown button";
         dropDownList[i].innerHTML = timeNames[i];
         dropDownList[i].className = "a";
         if (timeNames[i] == lastName){
@@ -337,13 +350,22 @@ function setupMenu2Buttons(){
     document.getElementById("create time clash button").onclick = function() {createTimeClashButton()};
     updateTeamClashDropDown();
     updateTimeClashDropDown();
+    removeTimeSlotButtons();
+}
+
+function removeTimeSlotButtons(){
+    var buttons1 = document.getElementsByClassName('timeSlotButton');
+    var buttons2 = document.getElementsByClassName('deleteTimeSlotButton');
+    for (let i = 0; i < buttons1.length; i++){
+        buttons1[i].style.display = 'none';
+        buttons2[i].style.display = 'none';
+    }
+
 }
 
 function saveSchedulePlusClashes() {
-    console.log("Saving2...");
-    
     schedule = makeJSONSchedule();
-
+    changeTeamIds();
     var inputField = document.createElement("INPUT");
     inputField.setAttribute("type", "text");
     inputField.setAttribute("value", "Save as:");
@@ -355,16 +377,15 @@ function saveSchedulePlusClashes() {
         if (event.key === "Enter"){
             if (inputField.value.length > maxlength) {
                 inputField.value = inputField.value.substring(0, maxlength);
-                justSaved = true;
                 return;
             }
             var scheduleName = inputField.value;
             inputField.replaceWith(button);
             localStorage.setItem(scheduleName, JSON.stringify(schedule));
-            //console.log(schedule);
         }
     });
     setupLoadSchedule();
+    justSaved = true;
 }
 
 function changeTeamIds() {
@@ -411,12 +432,6 @@ function makeJSONSchedule() {
             }
         }
     }
-    //console.log(dayNameList);
-    // console.log(numberTimeslotPerDayList);
-    // console.log(numberOfCourtsPerTimeslotList);
-    // console.log(timeslotDescriptionList);
-    // console.log(numberOfDays);
-    // console.log(courtNamesList);
     const schedule = {
         "number of days": numberOfDays,
         "day names": dayNameList,
@@ -431,10 +446,8 @@ function makeJSONSchedule() {
 }
 
 function saveSchedule() {
-    console.log("Saving...");
-
     renameAllEmptyCourts('-');
-
+    changeTeamIds();
     schedule = makeJSONSchedule();
 
     var inputField = document.createElement("INPUT");
@@ -448,16 +461,16 @@ function saveSchedule() {
         if (event.key === "Enter"){
             if (inputField.value.length > maxlength) {
                 inputField.value = inputField.value.substring(0, maxlength);
-                justSaved = true;
+                
                 return;
             }
             var scheduleName = inputField.value;
             inputField.replaceWith(button);
             localStorage.setItem(scheduleName, JSON.stringify(schedule));
-            //console.log(schedule);
         }
     });
     setupLoadSchedule();
+    justSaved = true;
 }
 
 function deleteFromLocalStorage(str){
@@ -467,13 +480,11 @@ function deleteFromLocalStorage(str){
 
 function loadSchedule(str) {
     if(event.ctrlKey){
-
         deleteFromLocalStorage(str);
         return;
     }
     
     var schedule = JSON.parse(localStorage.getItem(str));
-    console.log(schedule);
     removeAllChildren(document.getElementById('grid'));
     numberOfDays = 0;
     var timeslot = 0;
@@ -508,7 +519,6 @@ function loadSchedule(str) {
             }
         }
     }
-    console.log(schedule["team clashes"]);
     teamClashList = schedule["team clashes"];
     if (!teamClashList){
         teamClashList = [];
@@ -519,6 +529,9 @@ function loadSchedule(str) {
     }
     updateTeamClashDropDown();
     updateTimeClashDropDown();
+    if(document.getElementById('Menu2').style.display != 'none'){
+        removeTimeSlotButtons();
+    }
     justSaved = true;
 }
 
@@ -631,7 +644,6 @@ function setNumberCourts() {
 }
 
 function windowResize() {
-    console.log(document.getElementById('grid').offsetWidth);
     numberOfCols = Math.max(1, Math.floor(document.getElementById('grid').offsetWidth/410));
     numberOfRows = Math.ceil(numberOfDays/numberOfCols);
 
@@ -657,7 +669,6 @@ function addTimeSlot(day){
         courts[i] = document.createElement(id);
         courts[i].className = "court";
         courts[i].draggable = true;
-        courts[i].addEventListener('dragstart', function(){startDrag(courts[i])});
         courts[i].addEventListener('dragend', function(){endDrag(courts[i])});
         courts[i].addEventListener('dragenter', function(){dragEnter(courts[i])});
         courts[i].addEventListener('dragleave', function(){dragLeave(courts[i])});
@@ -671,10 +682,6 @@ function addTimeSlot(day){
     
     resizeTimeSlot(newTimeSlot);
     justSaved = false;
-}
-
-function startDrag(ele) {
-    console.log("startdrag");
 }
 
 function swapNodes(n1, n2) {
