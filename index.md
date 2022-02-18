@@ -56,6 +56,7 @@
     <div class="layout" id="Menu3" style="display: none;">
         <button class="saveLoadButton" id="lock button">lock</button>
         <button class="saveLoadButton" id="unlock button">unlock</button>
+        <button class="button" id="score button" style="float: right; padding: 4px 4px">Score:<br> 85</button>
     </div>
 </section>
 
@@ -83,6 +84,90 @@ setupMenu1Buttons();
 setupLoadSchedule();
 window.onresize = windowResize;
 
+function evaluateScore() {
+    var score = 0;
+    
+    for (let i = 0; i < teamClashList.length; i++){
+        var teamClash = teamClashList[i];
+        
+        for (let j = 0; j < timeClashList.length; j++){
+            var timeClash = timeClashList[j];
+            score -= clashEval(teamClash, timeClash);
+        }
+    }
+
+    score -= 100*sameDayTrainingCheck();
+
+    document.getElementById('score button').innerHTML = "Score: <br>" + score;
+
+}
+
+function sameDayTrainingCheck(){
+    var days = document.getElementsByClassName('divDay');
+    var clashCounter = 0;
+    for (i = 0; i < days.length; i++){
+        var teamNameList = [];
+        var teams = days[i].getElementsByClassName('team');
+        for (j = 0; j < teams.length; j++){
+            if (teamNameList.includes(teams[j].innerHTML)){
+                clashCounter++;
+                console.log("Can not train twice per day, team: " + teams[j].innerHTML);
+            }
+            teamNameList.push(teams[j].innerHTML);
+        }
+    }
+    return clashCounter;
+}
+
+function getTeamLocationName(team){
+    return team.parentElement.parentElement.parentElement.firstChild.firstChild.innerHTML + ": " + team.parentElement.firstChild.innerHTML
+}
+
+function getDayNameFromTeam(team){
+    return team.parentElement.parentElement.parentElement.firstChild.firstChild.innerHTML;
+}
+
+function clashEval(teamClash, timeClash){
+    console.log("new clash");
+    var teams = document.getElementsByClassName('team');
+    var teams1 = [];
+    var teams2 = [];
+    
+    var clashCounter = 0;
+    for (let i = 0; i < teams.length; i++) {
+        if (teams[i].id == teamClash[0]){
+            teams1.push(teams[i]);
+        }
+        if (teams[i].id == teamClash[1]){
+            teams2.push(teams[i]);
+        }
+    }
+    for (let i = 0; i < teams1.length; i++){
+        for (let j = 0; j < teams2.length; j++){
+
+            var team1 = teams1[i];
+            var team2 = teams2[j];
+            var timeName1 = timeClash[0];
+            var timeName2 = timeClash[1];
+            var locationNameTeam1 = getTeamLocationName(team1);
+            var locationNameTeam2 = getTeamLocationName(team2);
+            
+            if (locationNameTeam1 == timeName1 && locationNameTeam2 == timeName2){
+                clashCounter++;
+            }
+            if (locationNameTeam2 == timeName1 && locationNameTeam1 == timeName2){
+                clashCounter++;
+            }
+            if (locationNameTeam1 == locationNameTeam2){
+                clashCounter += 2;
+            }
+        }
+    }
+
+    return clashCounter;
+
+}
+
 function getTeamNameList() {
     var teams = document.getElementsByClassName('team');
     var nameList = [];
@@ -105,6 +190,7 @@ function setupComplete(){
     document.getElementById("Menu2").style.display = "none";
     document.getElementById("Menu3").style.display = "block";
     setupMenu3Buttons();
+    
 } 
 //----------------------------------------------------------------------------------
 function updateTeamClashDropDown(){
@@ -167,7 +253,7 @@ function createTeamClashButton(){
     var dropDownArea = document.getElementById('load create team clash dropdown');
     removeAllChildren(dropDownArea);
     var dropDownList = [];
-    console.log(dropDownList);
+
     for (let i = 0; i < teamNames.length; i++){
         dropDown = document.createElement('a');
         dropDownList.push(dropDown);
@@ -176,18 +262,15 @@ function createTeamClashButton(){
         dropDownList[i].className = "a";
         dropDownArea.appendChild(dropDownList[i]);
         dropDownList[i].onclick = function() {nextTeamClashSelect(dropDownList[i].innerHTML, dropDownArea)};
-        console.log(dropDownList[i]);
+
     }
     dropDownArea.style.display = 'block';
-    console.log(dropDownArea.style.display);
-    console.log("got to here");
     window.onclick = function(event) {
-        console.log(event.target.className);
+
         if (event.target.className != 'saveLoadButton' && event.target.className != 'a') {
             dropDownArea.style.display = 'none';
         }
     }
-    console.log(dropDownArea.style.display);
 }
 
 function teamClashSelectComplete(first, second, dropDownArea){
@@ -370,9 +453,9 @@ function setupMenu2Buttons(){
 }
 
 function setupMenu3Buttons(){
-    console.log("settingUp");
     document.getElementById("lock button").onclick = function() {lockTeamPosition()};
     document.getElementById("unlock button").onclick = function() {unlockTeamPosition()};
+    evaluateScore();
 }
 
 function lockTeamPosition(){
@@ -427,6 +510,7 @@ function saveSchedulePlusClashes() {
     });
     setupLoadSchedule();
     justSaved = true;
+    evaluateScore();
 }
 
 function changeTeamIds() {
@@ -512,6 +596,7 @@ function saveSchedule() {
     });
     setupLoadSchedule();
     justSaved = true;
+    evaluateScore();
 }
 
 function deleteFromLocalStorage(str){
@@ -574,6 +659,7 @@ function loadSchedule(str) {
         removeTimeSlotButtons();
     }
     justSaved = true;
+    evaluateScore();
 }
 
 function removeAllChildren(parent){
@@ -657,6 +743,7 @@ function addTeam() {
                         }
                     }
                     justSaved = false;
+                    evaluateScore();
                 }
             });
         } 
@@ -721,6 +808,7 @@ function addTimeSlot(day){
     
     resizeTimeSlot(newTimeSlot);
     justSaved = false;
+    evaluateScore();
 }
 
 function swapNodes(n1, n2) {
@@ -754,6 +842,8 @@ function endDrag(ele) {
         swapNodes(ele, draggingOver);
         if(ele != draggingOver){
             justSaved = false;
+            
+            evaluateScore();
         }
         draggingOver = null;
     }
@@ -794,6 +884,7 @@ function deleteTimeSlot(day){
     day.lastChild.lastChild.remove()
     }
     justSaved = false;
+    evaluateScore();
 }
 
 function makeHeader(day){
@@ -842,6 +933,7 @@ function createTrainingDay() {
 
     windowResize();
     justSaved = false;
+    evaluateScore();
 }
 
 function editDayDescription(description) {
@@ -859,6 +951,7 @@ function editDayDescription(description) {
             description.innerHTML = inputField.value;
             inputField.replaceWith(description);
             justSaved = false;
+            
         }
     });
     
@@ -873,6 +966,7 @@ function deleteTrainingDay() {
     }
     windowResize();
     justSaved = false;
+    evaluateScore();
 }
 
 </script>
