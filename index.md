@@ -169,7 +169,6 @@ function createTeamClashButton(){
     var dropDownList = [];
     console.log(dropDownList);
     for (let i = 0; i < teamNames.length; i++){
-        console.log(teamNames[i]);
         dropDown = document.createElement('a');
         dropDownList.push(dropDown);
         dropDownList[i].id = "team clash dropdown button";
@@ -177,9 +176,11 @@ function createTeamClashButton(){
         dropDownList[i].className = "a";
         dropDownArea.appendChild(dropDownList[i]);
         dropDownList[i].onclick = function() {nextTeamClashSelect(dropDownList[i].innerHTML, dropDownArea)};
+        console.log(teamNames[i]);
         console.log("making element");
     }
     dropDownArea.style.display = 'block';
+    console.log(dropDownArea.style.display);
     console.log("got to here");
     window.onclick = function(event) {
         if (!event.target.matches('.saveloadbutton') && !event.target.matches('a')) {
