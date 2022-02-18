@@ -163,11 +163,11 @@ function removeTeamClash(clash){
 }
 
 function createTeamClashButton(){
-    console.log("clicked")
     var teamNames = getTeamNameList();
     var dropDownArea = document.getElementById('load create team clash dropdown');
     removeAllChildren(dropDownArea);
     var dropDownList = [];
+    console.log(dropDownList);
     for (let i = 0; i < teamNames.length; i++){
         dropDown = document.createElement('a');
         dropDownList.push(dropDown);
@@ -176,8 +176,10 @@ function createTeamClashButton(){
         dropDownList[i].className = "a";
         dropDownArea.appendChild(dropDownList[i]);
         dropDownList[i].onclick = function() {nextTeamClashSelect(dropDownList[i].innerHTML, dropDownArea)};
+        console.log("making element");
     }
     dropDownArea.style.display = 'block';
+    console.log("got to here");
     window.onclick = function(event) {
         if (!event.target.matches('.saveloadbutton') && !event.target.matches('a')) {
             dropDownArea.style.display = 'none';
