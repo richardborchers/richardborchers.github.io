@@ -154,8 +154,10 @@ function clashEval(teamClash, timeClash){
             
             if (locationNameTeam1 == timeName1 && locationNameTeam2 == timeName2){
                 clashCounter++;
+                console.log("Clash 1 in " + locationNameTeam1 + ", " + locationNameTeam2 + ", at " + timeName1);
             }
             if (locationNameTeam2 == timeName1 && locationNameTeam1 == timeName2){
+                console.log("Clash 2 in " + locationNameTeam1 + ", " + locationNameTeam2 + ", at " + timeName1);
                 clashCounter++;
             }
             if (locationNameTeam1 == locationNameTeam2){
