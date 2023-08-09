@@ -111,7 +111,7 @@ function sameDayTrainingCheck(){
         for (j = 0; j < teams.length; j++){
             if (teamNameList.includes(teams[j].innerHTML)){
                 clashCounter++;
-                console.log("Can not train twice per day, team: " + teams[j].innerHTML);
+                console.log("Can not train twice per day!!! Team: " + teams[j].innerHTML);
             }
             teamNameList.push(teams[j].innerHTML);
         }
