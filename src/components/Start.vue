@@ -9,7 +9,7 @@
         <v-window v-model="tab">
             <v-window-item v-for="item in tabContent" :key="item.title" :value="item.title">
                 <v-card color="one" flat>
-                    <component :is="item.comp" :days="days"></component>
+                    <component :is="item.comp" :days="days" :teams="teams"></component>
                 </v-card>
             </v-window-item>
         </v-window>
@@ -17,16 +17,19 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, shallowRef } from 'vue';
 import EditLayout from '../components/EditLayout.vue'
 import ViewLayout from '../components/ViewLayout.vue'
+import Teams from '../components/Teams.vue'
 
-const days = ref([]);
+const days = ref([])
+const teams = ref([])
 
 const tab = ref('')
-const tabContent = ref([
-    { title: "Edit Layout", comp: EditLayout},
-    { title: "View Layout", comp: ViewLayout }
+const tabContent = shallowRef([
+    { title: "Edit Layout", comp: EditLayout },
+    { title: "View Layout", comp: ViewLayout },
+    { title: "Teams", comp: Teams }
 ])
 
 </script>

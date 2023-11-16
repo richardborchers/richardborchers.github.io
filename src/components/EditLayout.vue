@@ -51,7 +51,8 @@
 import { ref, defineProps } from 'vue';
 import AddDayForm from './AddDayForm.vue'
 
-const { days } = defineProps(['days']);
+const { days, teams } = defineProps(['days', 'teams']);
+
 
 const defaultText = "Helloooo"
 
