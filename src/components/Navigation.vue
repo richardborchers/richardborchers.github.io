@@ -13,7 +13,7 @@
                 <v-icon right icon="mdi-logout"></v-icon>
             </v-btn>
         </v-app-bar>
-        <v-navigation-drawer v-model="drawer" location="left" color="two">
+        <v-navigation-drawer v-model="drawer" location="left" color="one">
             <v-list density="compact" nav>
                 <v-list-item v-for="item in items" :prepend-icon="item.icon" :title="item.text"
                     :value="item.text"></v-list-item>

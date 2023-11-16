@@ -1,15 +1,18 @@
 <template>
   <v-app>
-    <v-main>
+    <v-main style="background-color: #433633">
       <Navigation></Navigation>
-      <Default></Default>
+      <RouterView/>
     </v-main>
   </v-app>
 </template>
 
 <script setup>
 import Navigation from './components/Navigation.vue';
-import Default from './components/Default.vue';
 </script>
 
-<style scoped></style>
+<style>
+body {
+  background-color:#433633;
+}
+</style>

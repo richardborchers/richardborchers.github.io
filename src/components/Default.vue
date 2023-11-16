@@ -1,20 +1,36 @@
-
-import { createVNodeCall } from '@vue/compiler-core';
-
 <template>
-    <v-container justify-center>
-        <v-card color="four">
-            <v-row>
-                <v-col cols="12">
-                    <v-btn class="ma-5">Get started</v-btn>
-                </v-col>
-                <v-col cols="12">
-                    <v-btn class="ma-5">Load existing project</v-btn>
-                </v-col>
-            </v-row>
-        </v-card>
+    <v-container fluid>
+
+        <v-row justify="center">
+            <v-col cols="6">
+                <v-card color="four">
+                    <v-btn variant="tonal" class="large-button" to="/start" @click="startClick">Get started</v-btn>
+                </v-card>
+            </v-col>
+        </v-row>
+        <v-row justify="center">
+
+            <v-col cols="6">
+                <v-card color="four">
+                    <v-btn variant="tonal" class="large-button">Load existing project</v-btn>
+                </v-card>
+            </v-col>
+        </v-row>
 
     </v-container>
 </template>
 
-<style scoped></style>
+<script setup>
+// import router from '../../plugins/router'
+
+// function startClick() {
+//     router.push("/start")
+// }
+</script>
+
+<style scoped>
+.large-button {
+    min-height: 30vh;
+    width: 100%;
+}
+</style>
