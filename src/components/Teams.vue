@@ -57,7 +57,6 @@ const formActive = ref(false)
 
 
 const AddTeams = (info) => {
-    console.log(info)
     formActive.value = false;
 
     for (let i = 0; i < info.amountOfTeams; i++) {

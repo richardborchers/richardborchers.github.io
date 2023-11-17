@@ -1,6 +1,8 @@
 <template>
     <v-container class="py-2 px-0 mx-1 my-2">
-
+        <v-row class="mt-0" v-if="days.length == 0">
+            <v-col>Layout empty, create the schedule in "Edit Layout"</v-col>
+        </v-row>
         <v-row>
             <v-col v-for="day in days" cols="12" md="6">
                 <v-card :title="day.title" color="five" class="pa-1">

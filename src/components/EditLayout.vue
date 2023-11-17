@@ -67,11 +67,9 @@ const AddDay = (info) => {
     }
 
     days.push(day)
-    console.log(days)
 }
 
 function DeleteDay(day) {
-    console.log(day)
     const index = days.indexOf(day);
     if (index > -1) { // only splice array when item is found
         days.splice(index, 1); // 2nd parameter means remove one item only
